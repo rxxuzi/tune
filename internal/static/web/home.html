@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tune - Home</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="/web/css/style.css">
+    <link rel="stylesheet" href="/web/css/home.css">
+</head>
+<body>
+<header>
+    <h1 id="tune">Tune</h1>
+    <div class="user-info">
+        <span class="material-icons">account_circle</span>
+        <p>{{ .UserHost }}</p>
+    </div>
+</header>
+<main>
+    <div class="dashboard">
+        <section class="welcome-section">
+            <h2>Welcome to Tune</h2>
+        </section>
+
+        <div class="actions-grid">
+            <div class="action-card">
+                <span class="material-icons">terminal</span>
+                <div class="action-content">
+                    <h3>Terminal</h3>
+                    <p>Access your secure terminal session</p>
+                    <a href="/terminal" class="action-button">
+                        <span>Open Terminal</span>
+                        <span class="material-icons">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="action-card">
+                <span class="material-icons">logout</span>
+                <div class="action-content">
+                    <h3>Logout</h3>
+                    <p>End your current session</p>
+                    <a href="/logout" class="action-button secondary">
+                        <span>Logout</span>
+                        <span class="material-icons">power_settings_new</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

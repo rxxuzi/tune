@@ -1,0 +1,209 @@
+.login-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.login-content {
+    display: flex;
+    gap: 4rem;
+    align-items: flex-start;
+    margin-top: 2rem;
+}
+
+.login-form-section {
+    flex: 1;
+    max-width: 400px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.input-field {
+    position: relative;
+    margin-top: 1rem;
+}
+
+.input-field label {
+    position: absolute;
+    left: 2.5rem;
+    top: 0.75rem;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.input-field input:focus,
+.input-field input:valid {
+    border-bottom: 2px solid var(--primary-pink);
+}
+
+.input-field input:focus + label,
+.input-field input:valid + label {
+    top: -0.5rem;
+    font-size: 0.75rem;
+    color: var(--primary-pink);
+}
+
+.input-field .material-icons {
+    position: absolute;
+    left: 0;
+    top: 0.75rem;
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
+}
+
+.input-field input:focus ~ .material-icons {
+    color: var(--primary-pink);
+}
+
+.submit-button {
+    margin-top: 1rem;
+    padding: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, var(--primary-pink), var(--primary-purple));
+    border: none;
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(248, 147, 253, 0.2);
+}
+
+.submit-button .material-icons {
+    font-size: 1.25rem;
+}
+
+/* Saved Hosts Section */
+.saved-hosts-section {
+    flex: 1;
+}
+
+.saved-hosts-section h3 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    color: var(--text-secondary);
+}
+
+.saved-hosts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.host-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.host-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+}
+
+.host-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.host-info .material-icons {
+    color: var(--primary-purple);
+}
+
+.host-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.host-name {
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+.host-port {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+}
+
+.connect-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: var(--primary-pink);
+    text-decoration: none;
+    font-size: 0.875rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.connect-link:hover {
+    background: rgba(248, 147, 253, 0.1);
+}
+
+.connect-link .material-icons {
+    font-size: 1.25rem;
+}
+
+.no-hosts {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 2rem;
+    color: var(--text-secondary);
+    text-align: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 4px;
+}
+
+.no-hosts .material-icons {
+    color: var(--primary-purple);
+}
+
+@media (max-width: 768px) {
+    .login-content {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .login-form-section {
+        max-width: 100%;
+    }
+}
+
+.input-field input {
+    width: 100%;
+    padding: 0.75rem 0 0.75rem 2.5rem;
+    font-size: 1rem;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    outline: none; /* Remove the default focus outline */
+}
+
+.input-field input:focus {
+    outline: none; /* Ensure no outline on focus */
+    border-bottom: 1px solid var(--primary-pink);
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tune - Login</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="/web/css/style.css">
+    <link rel="stylesheet" href="/web/css/login.css">
+</head>
+<body>
+<header>
+    <h1 id="tune">Tune</h1>
+</header>
+<main>
+    <div class="login-container">
+        <div class="login-content">
+            <div class="login-form-section">
+                <form method="POST" action="/login" class="login-form">
+                    <div class="input-field">
+                        <input type="text" id="host" name="host" required>
+                        <label for="host">Host</label>
+                        <i class="material-icons">dns</i>
+                    </div>
+
+                    <div class="input-field">
+                        <input type="text" id="user" name="user" required>
+                        <label for="user">Username</label>
+                        <i class="material-icons">person</i>
+                    </div>
+
+                    <div class="input-field">
+                        <input type="number" id="port" name="port" value="22" required>
+                        <label for="port">Port</label>
+                        <i class="material-icons">settings_ethernet</i>
+                    </div>
+
+                    <div class="input-field">
+                        <input type="password" id="password" name="password" required>
+                        <label for="password">Password</label>
+                        <i class="material-icons">lock</i>
+                    </div>
+
+                    <button type="submit" class="submit-button">
+                        <span class="material-icons">login</span>
+                        Connect
+                    </button>
+                </form>
+            </div>
+
+            <div class="saved-hosts-section">
+                <h3>Saved Connections</h3>
+                <div class="saved-hosts-list">
+                    {{ range .Hosts }}
+                    <div class="host-card">
+                        <div class="host-info">
+                            <span class="material-icons">computer</span>
+                            <div class="host-details">
+                                <span class="host-name">{{ .User }}@{{ .Host }}</span>
+                                <span class="host-port">Port: {{ .Port }}</span>
+                            </div>
+                        </div>
+                        <a href="/login/select?host={{ .Host }}" class="connect-link">
+                            <span class="material-icons">power</span>
+                            Connect
+                        </a>
+                    </div>
+                    {{ else }}
+                    <div class="no-hosts">
+                        <span class="material-icons">info</span>
+                        No saved connections available
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

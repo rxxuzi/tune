@@ -1,0 +1,231 @@
+/* Terminal Layout */
+html, body {
+    height: 100%;
+}
+
+main {
+    height: calc(100vh - 60px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.terminal-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.terminal-container {
+    background: rgba(10, 10, 10, 0.95);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Terminal Header */
+.terminal-header {
+    background: rgba(28, 28, 30, 0.95);
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.window-controls {
+    display: flex;
+    gap: 0.5rem;
+    padding-right: 1rem;
+}
+
+.window-button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transition: opacity 0.2s ease;
+}
+
+.window-button:hover {
+    opacity: 0.8;
+}
+
+.close { background-color: #FF5F56; }
+.minimize { background-color: #FFBD2E; }
+.maximize { background-color: #27C93F; }
+
+.terminal-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.terminal-title .material-icons {
+    font-size: 1.125rem;
+    color: var(--primary-purple);
+}
+
+.terminal-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Terminal Content */
+#terminal {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 14px;
+    line-height: 1.4;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+/* Buttons */
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-btn {
+    padding: 0.25rem;
+    background: transparent;
+    border: none;
+}
+.action-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, var(--primary-pink) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+}
+.action-btn:hover::before {
+    width: 150px;
+    height: 150px;
+    opacity: 0.1;
+}
+
+.material-icons, .action-btn .material-icons {
+    font-size: 1.25rem;
+}
+
+/* Message Container */
+.message-container {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background: rgba(28, 28, 30, 0.95);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.message-icon {
+    color: var(--primary-purple);
+    font-size: 1.25rem;
+}
+
+.message-text {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+/* XTerm Customization */
+.xterm-viewport::-webkit-scrollbar {
+    width: 8px;
+}
+
+.xterm-viewport::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.xterm-viewport::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.xterm-viewport::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.xterm-cursor {
+    background-color: var(--primary-pink) !important;
+    border-color: var(--primary-pink) !important;
+}
+
+.xterm-cursor-blink {
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .terminal-wrapper {
+        margin: 1rem auto;
+    }
+
+    .terminal-header {
+        padding: 0.5rem;
+    }
+
+    .terminal-title span:not(.material-icons) {
+        display: none;
+    }
+}
+
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overflow: hidden;
+}
+
+#terminal::-webkit-scrollbar {
+    display: none;
+}
+
+#terminal {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}

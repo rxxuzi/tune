@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tune - Terminal</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
+    <link rel="stylesheet" href="/web/css/style.css">
+    <link rel="stylesheet" href="/web/css/terminal.css">
+</head>
+<body>
+<header>
+    <a href="/home" id="tune">Tune</a>
+</header>
+<main>
+    <div class="terminal-wrapper">
+        <div class="terminal-container">
+            <div class="terminal-header">
+                <div class="window-controls">
+                    <span class="window-button close"></span>
+                    <span class="window-button minimize"></span>
+                    <span class="window-button maximize"></span>
+                </div>
+                <span class="terminal-title">
+                    Tune Terminal
+                </span>
+                <div class="terminal-actions">
+                    <button id="clearBtn" class="action-btn" title="Clear Terminal">
+                        <span class="material-icons">clear_all</span>
+                    </button>
+                    <button id="copyBtn" class="action-btn" title="Copy Content">
+                        <span class="material-icons">content_copy</span>
+                    </button>
+                </div>
+            </div>
+            <div id="terminal"></div>
+        </div>
+        <div id="message" class="message-container">
+            <span class="material-icons message-icon">info</span>
+            <span class="message-text">Terminal ready</span>
+        </div>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.min.js"></script>
+<script src="/web/javascript/terminal.js"></script>
+</body>
+</html>
