@@ -11,7 +11,7 @@ import (
 	"strconv"
 
 	"github.com/google/uuid"
-	"github.com/rxxuzi/tune/internal/static" // 埋め込みファイルシステム
+	"github.com/rxxuzi/tune/internal/static"
 )
 
 func RegisterHandlers(mux *http.ServeMux) {
@@ -23,6 +23,7 @@ func RegisterHandlers(mux *http.ServeMux) {
 	mux.HandleFunc("/logout", logoutHandler)
 
 	RegisterUploaderHandlers(mux)
+	RegisterDriveHandlers(mux)
 	// 静的ファイルのハンドラ
 	webFS := http.FS(static.SubFS)
 	fileServer := http.FileServer(webFS)
@@ -82,7 +83,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		user := r.FormValue("user")
 		portStr := r.FormValue("port")
 		pw := r.FormValue("password")
-		saveConnection := r.FormValue("save_connection") // 新しく追加
+		saveConnection := r.FormValue("save_connection")
 
 		port, err := strconv.Atoi(portStr)
 		if err != nil {

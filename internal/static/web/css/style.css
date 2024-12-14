@@ -107,3 +107,19 @@ main {
     -webkit-text-fill-color: transparent;
 }
 
+/* Header user info styles */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: absolute;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+}
+
+.user-info .material-icons {
+    font-size: 1.5rem;
+    color: var(--primary-purple);
+}

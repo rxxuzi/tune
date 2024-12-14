@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tune Drive</title>
+    <link rel="stylesheet" href="/web/css/style.css">
+    <link rel="stylesheet" href="/web/css/drive.css">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+<header>
+    <a href="/home" id="tune">Tune</a>
+    <div class="user-info">
+        <span class="material-icons">account_circle</span>
+        <p>{{ .UserHost }}</p>
+    </div>
+</header>
+<main>
+    <h2>Remote Drive</h2>
+    <div class="drive-container">
+        <div class="path-display">
+            Current Path: <span id="currentPath">~/{{ .SubPath }}</span>
+        </div>
+        <section class="folders">
+            <h2>Folders</h2>
+            <div class="grid" id="folderGrid">
+                {{ if ne .SubPath "" }}
+                <div class="item folder parent-dir" id="parent-dir-link">
+                    <div class="icon-name">
+                        <span class="material-icons">folder_open</span>
+                        <span>..</span>
+                    </div>
+                </div>
+                {{ end }}
+                <!-- フォルダはJavaScriptで動的に追加 -->
+            </div>
+        </section>
+        <section class="files">
+            <h2>Files</h2>
+            <div class="grid" id="fileGrid">
+                <!-- ファイルはJavaScriptで動的に追加 -->
+            </div>
+        </section>
+        <!-- Loading Message -->
+        <div id="loadingMessage" style="display:none; text-align:center; color:var(--text-secondary); margin:1rem;">Now Loading...</div>
+    </div>
+</main>
+
+<!-- プレビューモーダル -->
+<div class="modal" id="previewModal" style="display:none;">
+    <div class="modal-content">
+        <span class="close-button material-icons">close</span>
+        <h3>Preview</h3>
+        <div id="fileName" style="font-weight:bold; margin-bottom:1rem;"></div>
+        <div id="previewArea"></div>
+        <div id="modalButtons" style="margin-top:1rem;">
+            <!-- ボタンはdriveModal.jsで動的に追加 -->
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const initialPath = "{{ .SubPath }}";
+</script>
+<script src="/web/javascript/drive.js"></script>
+</body>
+</html>

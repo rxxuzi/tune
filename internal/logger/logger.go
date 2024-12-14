@@ -23,7 +23,7 @@ const (
 )
 
 var (
-	level       LogLevel    = INFO
+	level       LogLevel    = TRACE
 	ignoreLevel []LogLevel  = []LogLevel{}
 	logger      *log.Logger = log.New(os.Stdout, "", 0)
 	useColors   bool        = true
