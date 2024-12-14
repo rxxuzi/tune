@@ -27,6 +27,15 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
+body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overflow: hidden;
+}
+body::-webkit-scrollbar {
+    display: none;
+}
+
 /* Header styles */
 header {
     background-color: rgba(0, 0, 0, 0.8);

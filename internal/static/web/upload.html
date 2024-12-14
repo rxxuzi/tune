@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploader - Tune</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="/web/css/style.css">
+    <link rel="stylesheet" href="/web/css/uploader.css">
+</head>
+<body>
+<header>
+    <a href="/home" id="tune">Tune</a>
+</header>
+<main>
+    <div class="uploader-container">
+        <aside class="folder-tree">
+            <h2>Tree</h2>
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" placeholder="Search..." />
+                <span class="material-icons">search</span>
+            </div>
+            <ul id="folderTree"></ul>
+        </aside>
+        <section class="upload-section">
+            <h2>File Upload</h2>
+            <div class="selected-folder">
+                <strong>Selected:</strong> <span id="selectedFolder">None selected</span>
+            </div>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="file-input-wrapper">
+                    <input type="file" id="fileInput" name="files" multiple>
+                    <div class="file-input-overlay">
+                        <span class="material-icons">cloud_upload</span>
+                        <span>Choose files or drag here</span>
+                    </div>
+                </div>
+                <input type="hidden" id="destination" name="destination" value="">
+                <button type="submit" class="submit-button" disabled>
+                    <span class="material-icons">upload</span>
+                    Upload
+                </button>
+                <div id="progressContainer" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="uploadProgress"></div>
+                    </div>
+                    <span class="progress-text">0%</span>
+                </div>
+            </form>
+            <div id="uploadStatus"></div>
+        </section>
+    </div>
+</main>
+
+<!-- モーダルウィンドウの追加 -->
+<div id="fileModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Manage Selected Files</h2>
+        <table id="fileTable">
+            <thead>
+            <tr>
+                <th>Filename</th>
+                <th>Size</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- JavaScriptで動的に追加 -->
+            </tbody>
+        </table>
+        <button id="startUpload" class="action-button">
+            <span>Start Upload</span>
+            <span class="material-icons">cloud_upload</span>
+        </button>
+    </div>
+</div>
+
+<!-- テキストファイルのプレビュー用モーダル -->
+<div id="previewModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>File Preview</h2>
+        <pre id="filePreviewContent"></pre>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/web/javascript/uploader.js"></script>
+</body>
+</html>

@@ -14,7 +14,6 @@ import (
 	"github.com/rxxuzi/tune/internal/static" // 埋め込みファイルシステム
 )
 
-// ハンドラの登録関数
 func RegisterHandlers(mux *http.ServeMux) {
 	mux.HandleFunc("/login", loginHandler)
 	mux.HandleFunc("/login/select", loginSelectHandler)
@@ -23,18 +22,41 @@ func RegisterHandlers(mux *http.ServeMux) {
 	mux.HandleFunc("/terminal/ws", terminalWSHandler)
 	mux.HandleFunc("/logout", logoutHandler)
 
-	// テスト用ハンドラ
-	mux.HandleFunc("/test", testTemplateHandler)
-
+	RegisterUploaderHandlers(mux)
 	// 静的ファイルのハンドラ
 	webFS := http.FS(static.SubFS)
 	fileServer := http.FileServer(webFS)
 	mux.Handle("/web/", http.StripPrefix("/web/", fileServer))
 
-	// ルートは/loginへリダイレクト
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	// ルートは状況に応じて /login または /home へリダイレクト
+	mux.HandleFunc("/", rootRedirectHandler)
+}
+
+// ルートリダイレクトハンドラ
+func rootRedirectHandler(w http.ResponseWriter, r *http.Request) {
+	sess, err := getSession(r)
+	if err != nil {
+		logger.Err("Failed to retrieve session: %v", err)
 		http.Redirect(w, r, "/login", http.StatusFound)
-	})
+		return
+	}
+
+	sessionID, ok := sess.Values["session_id"].(string)
+	if !ok || sessionID == "" {
+		logger.Warn("Session does not contain session_id. Redirecting to /login")
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
+	}
+
+	_, exists := sshManager.GetClient(sessionID)
+	if !exists {
+		logger.Warn("No SSH connection exists for session. Redirecting to /login")
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
+	}
+
+	logger.Info("Active SSH connection found. Redirecting to /home")
+	http.Redirect(w, r, "/home", http.StatusFound)
 }
 
 // テンプレートのレンダリング関数
@@ -305,30 +327,4 @@ func logoutHandler(w http.ResponseWriter, r *http.Request) {
 	clearSession(w, r)
 	logger.Info("Session cleared. Logging out.")
 	http.Redirect(w, r, "/login", http.StatusFound)
-}
-
-// テスト用ハンドラ
-func testTemplateHandler(w http.ResponseWriter, r *http.Request) {
-	logger.Info("/test accessed")
-	err := template.Must(template.New("test").Parse(`
-		{{ define "layout" }}
-		<!DOCTYPE html>
-		<html lang="en">
-		<head>
-			<meta charset="UTF-8">
-			<title>Test</title>
-		</head>
-		<body>
-			{{ block "content" . }}{{ end }}
-		</body>
-		</html>
-		{{ end }}
-		{{ define "content" }}
-		<h1>Test</h1>
-		{{ end }}
-	`)).ExecuteTemplate(w, "layout", nil)
-	if err != nil {
-		logger.Err("Template test error: %v", err)
-		http.Error(w, "Template test error", http.StatusInternalServerError)
-	}
 }

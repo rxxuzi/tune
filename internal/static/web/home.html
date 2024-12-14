@@ -10,7 +10,7 @@
 </head>
 <body>
 <header>
-    <h1 id="tune">Tune</h1>
+    <a href="/home" id="tune">Tune</a>
     <div class="user-info">
         <span class="material-icons">account_circle</span>
         <p>{{ .UserHost }}</p>
@@ -30,6 +30,18 @@
                     <p>Access your secure terminal session</p>
                     <a href="/terminal" class="action-button">
                         <span>Open Terminal</span>
+                        <span class="material-icons">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="action-card">
+                <span class="material-icons">cloud_upload</span>
+                <div class="action-content">
+                    <h3>File Uploader</h3>
+                    <p>Upload files to your remote server</p>
+                    <a href="/uploader" class="action-button">
+                        <span>Open File Uploader</span>
                         <span class="material-icons">arrow_forward</span>
                     </a>
                 </div>
