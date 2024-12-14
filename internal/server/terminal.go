@@ -1,12 +1,11 @@
 package server
 
 import (
+	"github.com/gorilla/websocket"
 	"github.com/rxxuzi/tune/internal/logger"
+	"golang.org/x/crypto/ssh"
 	"io"
 	"net/http"
-
-	"github.com/gorilla/websocket"
-	"golang.org/x/crypto/ssh"
 )
 
 // WebSocket upgrader
@@ -111,7 +110,7 @@ func terminalWSHandler(w http.ResponseWriter, r *http.Request) {
 				}
 				break
 			}
-			if err := conn.WriteMessage(websocket.TextMessage, buf[:n]); err != nil {
+			if err := conn.WriteMessage(websocket.BinaryMessage, buf[:n]); err != nil { // TextMessage -> BinaryMessage
 				logger.Err("WebSocket: Error writing to WebSocket: %v", err)
 				break
 			}
@@ -129,7 +128,7 @@ func terminalWSHandler(w http.ResponseWriter, r *http.Request) {
 				}
 				break
 			}
-			if err := conn.WriteMessage(websocket.TextMessage, buf[:n]); err != nil {
+			if err := conn.WriteMessage(websocket.BinaryMessage, buf[:n]); err != nil { // TextMessage -> BinaryMessage
 				logger.Err("WebSocket: Error writing to WebSocket: %v", err)
 				break
 			}
@@ -181,6 +180,5 @@ func terminalWSHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-
 	logger.Info("WebSocket: Session ended")
 }

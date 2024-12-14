@@ -1,12 +1,13 @@
 package server
 
 import (
+	"fmt"
 	"github.com/rxxuzi/tune/internal/logger"
 	"html/template"
 	"io/ioutil"
 	"net/http"
 	"os/user"
-	"path"
+	"path/filepath"
 	"strconv"
 
 	"github.com/google/uuid"
@@ -59,6 +60,8 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		user := r.FormValue("user")
 		portStr := r.FormValue("port")
 		pw := r.FormValue("password")
+		saveConnection := r.FormValue("save_connection") // 新しく追加
+
 		port, err := strconv.Atoi(portStr)
 		if err != nil {
 			logger.Err("Failed to convert port number: %v", err)
@@ -109,12 +112,23 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// Save Connectionがチェックされている場合、接続情報を保存
+		if saveConnection == "on" {
+			err := saveSSHInfo(&info)
+			if err != nil {
+				logger.Err("Failed to save SSH connection info: %v", err)
+				// ユーザーにフィードバックを提供する場合はここに追加
+			} else {
+				logger.Info("SSH connection info saved for host: %s", info.Host)
+			}
+		}
+
 		logger.Info("SSH connection successful: %s@%s:%d", info.User, info.Host, info.Port)
 		http.Redirect(w, r, "/home", http.StatusFound)
 		return
 	}
 
-	// 保存済みホスト一覧を取得
+	// GETリクエストの場合の処理（既存のコード）
 	hosts, err := loadSavedHosts()
 	if err != nil {
 		logger.Warn("Failed to load saved hosts: %v", err)
@@ -148,7 +162,7 @@ func loginSelectHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "User info retrieval failed", http.StatusInternalServerError)
 		return
 	}
-	cfgFile := path.Join(u.HomeDir, ".tune", "verify", "ssh-"+targetHost+".json")
+	cfgFile := filepath.Join(u.HomeDir, ".tune", "verify", fmt.Sprintf("ssh-%s.json", targetHost)) // filepath.Join とファイル名の形式変更
 	data, err := ioutil.ReadFile(cfgFile)
 	if err != nil {
 		logger.Err("Failed to read host config file (%s): %v", cfgFile, err)

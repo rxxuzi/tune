@@ -6,9 +6,9 @@
 
 .login-content {
     display: flex;
-    gap: 4rem;
+    gap: 6rem;
     align-items: flex-start;
-    margin-top: 2rem;
+    margin-top: 3rem;
 }
 
 .login-form-section {
@@ -19,12 +19,24 @@
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2rem;
 }
 
 .input-field {
     position: relative;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
+}
+
+.input-field input {
+    width: 100%;
+    padding: 0.75rem 0 0.75rem 2.5rem;
+    font-size: 1rem;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    outline: none;
 }
 
 .input-field label {
@@ -38,7 +50,7 @@
 
 .input-field input:focus,
 .input-field input:valid {
-    border-bottom: 2px solid var(--primary-pink);
+    border-bottom: 1px solid var(--primary-pink);
 }
 
 .input-field input:focus + label,
@@ -60,6 +72,7 @@
     color: var(--primary-pink);
 }
 
+/* Modern gradient button */
 .submit-button {
     margin-top: 1rem;
     padding: 0.875rem;
@@ -69,21 +82,38 @@
     gap: 0.5rem;
     background: linear-gradient(135deg, var(--primary-pink), var(--primary-purple));
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     color: var(--text-primary);
     font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.submit-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent
+    );
+    transition: 0.5s;
+}
+
+.submit-button:hover::before {
+    left: 100%;
 }
 
 .submit-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(248, 147, 253, 0.2);
-}
-
-.submit-button .material-icons {
-    font-size: 1.25rem;
+    box-shadow: 0 0 20px rgba(248, 147, 253, 0.3);
 }
 
 /* Saved Hosts Section */
@@ -96,12 +126,13 @@
     font-weight: 500;
     margin-bottom: 1.5rem;
     color: var(--text-secondary);
+    padding-left: 0.5rem;
 }
 
 .saved-hosts-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem;
 }
 
 .host-card {
@@ -110,12 +141,14 @@
     justify-content: space-between;
     padding: 1rem;
     background: rgba(255, 255, 255, 0.03);
-    border-radius: 4px;
+    border-radius: 12px;
     transition: all 0.3s ease;
+    border: 1px solid transparent;
 }
 
 .host-card:hover {
     background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
     transform: translateY(-2px);
 }
 
@@ -127,11 +160,13 @@
 
 .host-info .material-icons {
     color: var(--primary-purple);
+    font-size: 1.25rem;
 }
 
 .host-details {
     display: flex;
     flex-direction: column;
+    gap: 0.25rem;
 }
 
 .host-name {
@@ -152,12 +187,14 @@
     color: var(--primary-pink);
     text-decoration: none;
     font-size: 0.875rem;
-    border-radius: 4px;
+    border-radius: 6px;
     transition: all 0.3s ease;
+    border: 1px solid transparent;
 }
 
 .connect-link:hover {
     background: rgba(248, 147, 253, 0.1);
+    border-color: var(--primary-pink);
 }
 
 .connect-link .material-icons {
@@ -167,17 +204,19 @@
 .no-hosts {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
     padding: 2rem;
     color: var(--text-secondary);
     text-align: center;
     justify-content: center;
     background: rgba(255, 255, 255, 0.03);
-    border-radius: 4px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .no-hosts .material-icons {
     color: var(--primary-purple);
+    font-size: 1.5rem;
 }
 
 @media (max-width: 768px) {
@@ -191,19 +230,78 @@
     }
 }
 
-.input-field input {
-    width: 100%;
-    padding: 0.75rem 0 0.75rem 2.5rem;
-    font-size: 1rem;
-    border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    background: transparent;
-    color: var(--text-primary);
-    transition: all 0.3s ease;
-    outline: none; /* Remove the default focus outline */
+/* Modernized checkbox styles */
+.checkbox-field {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    position: relative;
 }
 
-.input-field input:focus {
-    outline: none; /* Ensure no outline on focus */
-    border-bottom: 1px solid var(--primary-pink);
+.checkbox-field input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    margin: 0;
+    cursor: pointer;
+    position: relative;
+    background: transparent;
+    transition: all 0.2s ease;
 }
+
+.checkbox-field input[type="checkbox"]:hover {
+    border-color: var(--primary-pink);
+}
+
+.checkbox-field input[type="checkbox"]:checked {
+    background: linear-gradient(135deg, var(--primary-pink), var(--primary-purple));
+    border: none;
+}
+
+.checkbox-field input[type="checkbox"]:checked::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 0.875rem;
+    height: 0.875rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.checkbox-field input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(248, 147, 253, 0.2);
+}
+
+.checkbox-field label {
+    margin-left: 0.75rem;
+    color: var(--text-primary);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.2s ease;
+}
+
+.checkbox-field:hover label {
+    color: var(--primary-pink);
+}
+
+/* Optional: Add a focus style for accessibility */
+.checkbox-field input[type="checkbox"]:focus + label {
+    color: var(--primary-pink);
+}
+
+/* Add subtle animation for the check mark */
+.checkbox-field input[type="checkbox"]:checked::before {
+    animation: checkmark 0.2s ease-in-out;
+}
+
+

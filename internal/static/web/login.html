@@ -18,6 +18,7 @@
         <div class="login-content">
             <div class="login-form-section">
                 <form method="POST" action="/login" class="login-form">
+                    <!-- 既存の入力フィールド -->
                     <div class="input-field">
                         <input type="text" id="host" name="host" required>
                         <label for="host">Host</label>
@@ -41,7 +42,10 @@
                         <label for="password">Password</label>
                         <i class="material-icons">lock</i>
                     </div>
-
+                    <div class="checkbox-field">
+                        <input type="checkbox" id="save-connection" name="save_connection">
+                        <label for="save-connection">Save Connection</label>
+                    </div>
                     <button type="submit" class="submit-button">
                         <span class="material-icons">login</span>
                         Connect

@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const wsProtocol = location.protocol === 'https:' ? 'wss://' : 'ws://';
     let socket = new WebSocket(`${wsProtocol}${window.location.host}/terminal/ws`);
+    socket.binaryType = 'arraybuffer'; // 追加
 
     const setupSocket = () => {
         socket.onopen = () => {
@@ -29,8 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof event.data === 'string') {
                 term.write(event.data);
             } else {
-                const decoder = new TextDecoder('utf-8');
-                term.write(decoder.decode(event.data));
+                const data = new Uint8Array(event.data);
+                term.write(data);
             }
             term.scrollToBottom();
         };

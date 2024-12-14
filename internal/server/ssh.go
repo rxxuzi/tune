@@ -1,11 +1,14 @@
 package server
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"os/user"
 	"path"
+	"path/filepath"
 	"time"
 
 	"golang.org/x/crypto/ssh"
@@ -87,4 +90,29 @@ func parseSSHInfoJSON(data []byte) (SSHInfo, error) {
 		return SSHInfo{}, errors.New("不正なSSH情報")
 	}
 	return info, nil
+}
+
+func saveSSHInfo(info *SSHInfo) error {
+	dir, err := defaultVerifyDir()
+	if err != nil {
+		return err
+	}
+	err = os.MkdirAll(dir, 0700)
+	if err != nil {
+		return err
+	}
+	filename := fmt.Sprintf("ssh-%s.json", info.Host)
+	fpath := filepath.Join(dir, filename)
+
+	data, err := json.MarshalIndent(info, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(fpath, data, 0600)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
