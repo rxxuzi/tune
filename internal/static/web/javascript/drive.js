@@ -8,6 +8,8 @@ $(document).ready(function() {
     const closeButton = $('.close-button');
     const modalFileName = $('#modalFileName');
 
+    const max_name_len = 16;
+
     let currentRelPath = initialPath;
     let currentFiles = [];
     let currentFileIndex = -1;
@@ -22,6 +24,13 @@ $(document).ready(function() {
 
     function hideLoading() {
         loadingMessage.hide();
+    }
+
+    function truncateName(name) {
+        if (name.length > max_name_len) {
+            return name.substring(0, max_name_len) + '...';
+        }
+        return name;
     }
 
     loadDirectory(currentRelPath);
@@ -77,11 +86,12 @@ $(document).ready(function() {
         }
 
         folders.forEach(item => {
+            const truncatedName = truncateName(escapeHtml(item.name));
             const div = $(`
                 <div class="item folder" data-path="${item.path}">
                     <div class="icon-name">
                         <span class="material-icons">folder</span>
-                        <span>${escapeHtml(item.name)}</span>
+                        <span>${truncatedName}</span>
                     </div>
                 </div>
             `);
@@ -95,11 +105,12 @@ $(document).ready(function() {
 
         files.forEach((item, index) => {
             const iconName = getFileIcon(item.name);
+            const truncatedName = truncateName(escapeHtml(item.name));
             const div = $(`
                 <div class="item file" data-index="${index}">
                     <div class="icon-name">
                         <span class="material-icons">${iconName}</span>
-                        <span>${escapeHtml(item.name)}</span>
+                        <span>${truncatedName}</span>
                     </div>
                 </div>
             `);
@@ -121,8 +132,8 @@ $(document).ready(function() {
         if (['mp3', 'wav', 'aac', 'flac'].includes(ext)) return 'audio';
         if (ext === 'pdf') return 'pdf';
         if (ext === 'html' || ext === 'htm') return 'html';
-        if (['js', 'css', 'py', 'java', 'c', 'cpp', 'rb', 'go', 'php'].includes(ext)) return 'code';
-        if (['xml', 'json', 'yaml', 'yml', 'iml', 'gitignore'].includes(ext)) return 'data_object';
+        if (['css', 'py', 'java', 'c', 'rb', 'go', 'php', 'js', 'cpp', 'scala', 'h','hpp'].includes(ext)) return 'code';
+        if (['iml', 'json', 'xml', 'yaml', 'yml', 'gitignore'].includes(ext)) return 'data_object';
         if (['zip', 'tar', 'rar', '7z', 'gz', 'jar'].includes(ext)) return 'archive';
         return 'binary';
     }
@@ -138,7 +149,7 @@ $(document).ready(function() {
             case 'pdf': return 'picture_as_pdf';
             case 'html': return 'language';
             case 'code': return 'code';
-            case 'data_object': return 'data_object';
+            case 'data_object': return 'storage';
             case 'archive': return 'archive';
             default: return 'insert_drive_file';
         }
@@ -267,14 +278,6 @@ $(document).ready(function() {
         loadDirectory(newPath);
     });
 
-    function truncate(str, len) {
-        if (!str) return '';
-        if (str.length > len) {
-            return str.substring(0, len-3) + '...';
-        }
-        return str;
-    }
-
     function escapeHtml(str) {
         if (!str) return '';
         return str.replace(/&/g, '&amp;')
@@ -303,7 +306,7 @@ $(document).ready(function() {
         breadcrumb.append(homeLink);
 
         paths.forEach((part, index) => {
-            breadcrumb.append(' / ');
+            breadcrumb.append('<span class="separator">/</span>');
             accumulatedPath += (accumulatedPath ? '/' : '') + part;
             const link = $('<a href="#" data-path="' + accumulatedPath + '">' + escapeHtml(part) + '</a>');
             link.click(function(e){

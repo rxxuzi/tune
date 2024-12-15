@@ -1,23 +1,3 @@
-/* drive.css */
-:root {
-    --item-width: 250px;
-    --item-height: 60px;
-    --primary-pink: #F893FD;
-    --primary-purple: #AAAAFB;
-    --secondary-green: #A9FA9E;
-    --surface-black: #1C1C1E;
-    --text-primary: #FFFFFF;
-    --text-secondary: rgba(255, 255, 255, 0.7);
-    --header-height: 4.3rem;
-}
-
-.drive-container {
-    height: calc(100vh - 64px);
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
 body {
     overflow-y: scroll;
 }
@@ -25,7 +5,7 @@ body {
 header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     background-color: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -35,122 +15,132 @@ header {
     top: 0;
     z-index: 100;
     height: var(--header-height);
+    gap: 1rem;
+}
+
+.drive-container {
+    width: 100%;
+    min-height: calc(100vh - var(--header-height));
+    padding: 0;
 }
 
 main {
     max-width: none;
-    min-height: calc(100vh - var(--header-height));
-    height: auto;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    margin: 0 auto;
+    margin: 0;
+    padding: 2rem;
 }
 
 .folders, .files {
-    margin-bottom: 2.5rem;
-    flex: 1;
+    margin-bottom: 2rem;
 }
 
 .folders h2, .files h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--text-secondary);
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.folders h2 .material-icons, .files h2 .material-icons {
-    font-size: 1.75rem;
-    color: var(--primary-pink);
-}
-
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(var(--item-width), 1fr));
-    gap: 1.0rem;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
 }
 
 .item {
     background: rgba(255, 255, 255, 0.05);
-    padding: 1.25rem;
-    border-radius: 12px;
+    padding: 1rem;
+    border-radius: 8px;
     cursor: pointer;
     color: var(--text-secondary);
-    width: var(--item-width);
-    height: var(--item-height);
     border: 1px solid rgba(255,255,255,0.1);
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
-    text-align: left;
-}
-
-.item.folder, .item.file {
-    height: var(--item-height);
 }
 
 .item:hover {
-    border-color: var(--primary-pink);
     background: rgba(255,255,255,0.1);
-    transform: translateY(-4px);
-    box-shadow: 0 4px 20px rgba(248, 147, 253, 0.2);
+    transform: translateY(-2px);
+}
+
+.item.folder:hover {
+    border-color: var(--primary-pink);
+}
+
+.item.file:hover {
+    border-color: var(--secondary-green);
 }
 
 .icon-name {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    flex: 1;
 }
 
-.icon-name .material-icons {
-    font-size: 2rem;
-    transition: all 0.3s ease;
-}
-
-.item.file .material-icons {
-    color: var(--secondary-green);
+.icon-name span:not(.material-icons) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .item.folder .material-icons {
     color: var(--primary-pink);
 }
 
-.item:hover .icon-name .material-icons {
-    transform: scale(1.1);
+.item.file .material-icons {
+    color: var(--secondary-green);
 }
 
-.item:hover .icon-name span:not(.material-icons) {
+/* Breadcrumb styles */
+#breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0;
+    padding: 0;
+}
+
+#breadcrumb a {
     color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
 }
 
-.parent-dir .material-icons {
-    transform: rotate(180deg);
+#breadcrumb a:hover {
+    color: var(--primary-pink);
 }
 
-.icon-name span {
-    max-width: 150px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+#breadcrumb .separator {
+    color: var(--text-secondary);
 }
 
+#breadcrumb .current {
+    color: var(--primary-pink);
+    font-weight: 500;
+}
+
+/* Modal styles */
 .modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 9999;
+    z-index: 1000;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
 .modal.active {
@@ -160,41 +150,30 @@ main {
 
 .modal-content {
     background: var(--surface-black);
-    border-radius: 16px;
-    padding: 2rem;
-    width: 70%;
-    max-height: 80%;
+    width: 80%;
+    max-width: 800px;
+    max-height: 80vh;
+    border-radius: 8px;
     overflow: hidden;
-    position: relative;
-    border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    transform: scale(0.9);
-    transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
-}
-
-.modal.active .modal-content {
-    transform: scale(1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .modal-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    position: sticky;
-    top: 0;
-    background: var(--surface-black);
-    z-index: 10;
-    padding: 0.5rem 1rem;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    justify-content: space-between;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.modal-header #modalFileName {
-    font-size: 1.25rem;
-    font-weight: 600;
+#modalFileName {
     color: var(--text-primary);
-    max-width: 70%;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-right: 1rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -206,91 +185,47 @@ main {
 }
 
 .modal-header .buttons .material-icons {
-    font-size: 1.5rem;
-    cursor: pointer;
     color: var(--text-secondary);
-    transition: color 0.3s ease;
+    cursor: pointer;
+    transition: color 0.2s ease;
 }
 
 .modal-header .buttons .material-icons:hover {
-    color: var(--primary-pink);
+    color: var(--text-primary);
 }
 
 .modal-body {
-    overflow-y: auto;
-    margin-top: 1rem;
     flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
 }
 
-.modal-body h3 {
-    margin-top: 0;
-    color: var(--text-primary);
-}
-
-.modal-body #previewArea img,
-.modal-body #previewArea video,
-.modal-body #previewArea audio {
+#previewArea img,
+#previewArea video,
+#previewArea audio {
     max-width: 100%;
     max-height: 60vh;
     display: block;
-    margin: auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    margin: 0 auto;
+    border-radius: 4px;
 }
 
-.modal-body #previewArea pre {
+#previewArea pre {
     white-space: pre-wrap;
     word-wrap: break-word;
     color: var(--text-primary);
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
     padding: 1rem;
-    border-radius: 8px;
+    border-radius: 4px;
     font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
 }
 
-#downloadLink a {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    color: var(--primary-pink);
-    text-decoration: none;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
-
-#downloadLink a:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(248, 147, 253, 0.3);
-}
-
-#modalButtons button {
-    margin-right: 1rem;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 8px;
-    background: linear-gradient(135deg, var(--secondary-blue), var(--secondary-green));
-    color: var(--bg-black);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
-
-#modalButtons button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(161, 242, 254, 0.3);
-}
-
-#fileName {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    color: var(--primary-pink);
-    font-weight: 600;
-}
-
+/* Scrollbar styles */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -298,64 +233,24 @@ main {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--primary-purple);
-    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--primary-pink);
-}
-
-#loadingMessage {
-    display: none;
-    text-align: center;
-    color: var(--text-secondary);
-    margin: 1rem;
-}
-
-#breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0 2rem;
-    font-size: 1rem;
-    color: var(--text-secondary);
-    flex-wrap: wrap;
-}
-
-#breadcrumb a {
-    color: var(--primary-purple);
-    text-decoration: none;
-    transition: color 0.3s ease;
-    max-width: 200px;
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-#breadcrumb a:hover {
-    color: var(--primary-pink);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 @media (max-width: 768px) {
-    .drive-container {
-        padding: 1rem;
-    }
-
-    .icon-name span {
-        max-width: 100px;
+    .grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
 
     .modal-content {
-        width: 90%;
+        width: 95%;
     }
 
-    #modalFileName {
-        font-size: 1rem;
-    }
-
-    .modal-header .buttons .material-icons {
-        font-size: 1.25rem;
+    main {
+        padding: 1rem;
     }
 }
