@@ -1,3 +1,4 @@
+// internal/static/web/javascript/drive.js
 $(document).ready(function() {
     const folderGrid = $('#folderGrid');
     const fileGrid = $('#fileGrid');
@@ -8,10 +9,12 @@ $(document).ready(function() {
     const closeButton = $('.close-button');
 
     let currentRelPath = initialPath;
+    let currentFiles = [];
+    let currentFileIndex = -1;
 
-    // ローディングメッセージ表示用要素追加
-    const loadingMessage = $('<div id="loadingMessage" style="text-align:center; color:var(--text-secondary); margin:1rem;">Now Loading...</div>');
+    const loadingMessage = $('<div id="loadingMessage">Now Loading...</div>');
     $('.drive-container').append(loadingMessage);
+    hideLoading();
 
     function showLoading() {
         loadingMessage.show();
@@ -24,7 +27,7 @@ $(document).ready(function() {
     loadDirectory(currentRelPath);
 
     function loadDirectory(p) {
-        showLoading(); // ローディング表示
+        showLoading();
         $.ajax({
             url: '/api/drive/list',
             method: 'GET',
@@ -46,9 +49,14 @@ $(document).ready(function() {
         folderGrid.empty();
         fileGrid.empty();
 
-        // data.folders や data.files が存在しない場合、空配列を使用
-        const folders = data.folders || [];
-        const files = data.files || [];
+        const folders = Array.isArray(data.folders) ? data.folders.slice() : [];
+        const files = Array.isArray(data.files) ? data.files.slice() : [];
+
+        folders.sort((a, b) => a.name.localeCompare(b.name));
+        files.sort((a, b) => a.name.localeCompare(b.name));
+
+        currentFiles = files;
+        currentFileIndex = -1;
 
         if (p === '') {
             currentPath.text('~/');
@@ -56,7 +64,6 @@ $(document).ready(function() {
             currentPath.text('~/' + p);
         }
 
-        // 親ディレクトリリンクを追加（必要な場合）
         if (p !== '') {
             const parentPath = p.split('/').slice(0, -1).join('/');
             const parentDiv = $(`
@@ -75,13 +82,12 @@ $(document).ready(function() {
             folderGrid.append(parentDiv);
         }
 
-        // フォルダの表示
         folders.forEach(item => {
             const div = $(`
-                <div class="item folder">
+                <div class="item folder" data-path="${item.path}">
                     <div class="icon-name">
                         <span class="material-icons">folder</span>
-                        <span title="${escapeHtml(item.name)}">${truncate(item.name,20)}</span>
+                        <span>${escapeHtml(item.name)}</span>
                     </div>
                 </div>
             `);
@@ -93,17 +99,17 @@ $(document).ready(function() {
             folderGrid.append(div);
         });
 
-        // ファイルの表示
-        files.forEach(item => {
+        files.forEach((item, index) => {
             const div = $(`
-                <div class="item file">
+                <div class="item file" data-index="${index}">
                     <div class="icon-name">
                         <span class="material-icons">insert_drive_file</span>
-                        <span title="${escapeHtml(item.name)}">${truncate(item.name,20)}</span>
+                        <span>${escapeHtml(item.name)}</span>
                     </div>
                 </div>
             `);
             div.click(function(){
+                currentFileIndex = index;
                 previewFile(item);
             });
             fileGrid.append(div);
@@ -143,7 +149,6 @@ $(document).ready(function() {
     }
 
     function loadContent(filePath, responseType, mime, mediaType) {
-        showLoading();
         $.ajax({
             url: '/api/drive/download',
             method: 'GET',
@@ -176,20 +181,46 @@ $(document).ready(function() {
     }
 
     function showModal(contentHtml, filePath) {
+        downloadLink.html(`<a href="/api/drive/download?file=${encodeURIComponent(filePath)}" class="material-icons" title="Download">download</a>`);
         previewArea.html(contentHtml);
-        downloadLink.html(`<a href="/api/drive/download?file=${encodeURIComponent(filePath)}" class="material-icons" style="font-size:24px; color:white;">download</a>`);
-        previewModal.show();
+        previewModal.addClass('active');
     }
 
     function closeModal() {
-        previewModal.hide();
+        previewModal.removeClass('active');
         previewArea.html('');
         downloadLink.html('');
+        currentFileIndex = -1;
     }
 
     closeButton.click(function() {
         closeModal();
     });
+
+    $(document).keydown(function(e) {
+        if (previewModal.hasClass('active')) {
+            if (e.key === "ArrowLeft") {
+                navigatePreview(-1);
+            } else if (e.key === "ArrowRight") {
+                navigatePreview(1);
+            } else if (e.key === "Escape") {
+                closeModal();
+            }
+        }
+    });
+
+    function navigatePreview(direction) {
+        if (currentFileIndex === -1) return;
+
+        let newIndex = currentFileIndex + direction;
+        if (newIndex < 0 || newIndex >= currentFiles.length) {
+            return;
+        }
+
+        currentFileIndex = newIndex;
+        let item = currentFiles[newIndex];
+        previewFile(item);
+    }
 
     $(window).on('popstate', function() {
         let newPath = window.location.pathname.replace(/^\/drive\//, '');

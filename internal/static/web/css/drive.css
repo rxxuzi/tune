@@ -1,158 +1,279 @@
-:root{
-    --item-width: 200px;
-    --folder-height: calc(var(--item-width) / 4);
-    --file-height: calc(var(--item-width) / 1);
+:root {
+    --item-width: 250px;
+    --item-height: 60px;
 }
 
 .drive-container {
-    padding: 1rem;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 64px);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    flex: 1;
 }
+
+body {
+    overflow-y: scroll;
+}
+
+main {
+    max-width: none;
+    min-height: calc(100vh - var(--header-height));
+    height: auto;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
 
 .path-display {
-    margin-bottom: 1rem;
-    font-weight: bold;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
     color: var(--text-secondary);
-}
-
-.folders, .files {
-    margin-bottom: 2rem;
-}
-
-.folders h2, .files h2 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(var(--item-width), 1fr));
-    gap: 1rem;
-    overflow-y: auto; /* スクロール可能にする */
-    padding: 1rem;
-    max-height: 40vh; /* 必要に応じて調整 */
-}
-
-.item {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    text-align: left; /* 左寄せ */
-    color: var(--text-secondary);
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: background 0.2s, transform 0.2s;
-    display: flex;
-    align-items: center;
-    /* Flex direction row to place name next to icon */
-}
-
-.item:hover {
-    border-color: rgba(255,255,255,0.2);
-    background: rgba(255,255,255,0.1);
-    transform: translateY(-2px);
-    color: var(--primary-pink);
-}
-
-.icon-name {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.icon-name .material-icons {
-    font-size: 2.5rem;
+.path-display .material-icons {
+    font-size: 1.25rem;
+    color: var(--primary-purple);
+}
+
+.folders, .files {
+    margin-bottom: 2.5rem;
+    flex: 1;
+}
+
+.folders h2, .files h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.folders h2 .material-icons, .files h2 .material-icons {
+    font-size: 1.75rem;
     color: var(--primary-pink);
 }
 
-.parent-dir .material-icons {
-    transform: rotate(180deg); /* 親ディレクトリ用アイコンの向きを逆に */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--item-width), 1fr));
+    gap: 1.0rem;
 }
 
-/* モーダル */
+.item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.25rem;
+    border-radius: 12px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    width: var(--item-width);
+    height: var(--item-height);
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    text-align: left;
+}
+
+.item.folder, .item.file {
+    height: var(--item-height);
+}
+
+.item:hover {
+    border-color: var(--primary-pink);
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(248, 147, 253, 0.2);
+}
+
+.icon-name {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.icon-name .material-icons {
+    font-size: 2rem;
+    color: var(--primary-pink);
+    transition: all 0.3s ease;
+}
+
+.item:hover .icon-name .material-icons {
+    transform: scale(1.1);
+}
+
+.item:hover .icon-name span:not(.material-icons) {
+    color: var(--text-primary);
+}
+
+.parent-dir .material-icons {
+    transform: rotate(180deg);
+}
+
 .modal {
     position: fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background: rgba(0,0,0,0.5);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.modal.active {
+    opacity: 1;
+    visibility: visible;
 }
 
 .modal-content {
-    background: rgba(255,255,255,0.05);
-    border-radius: 8px;
-    padding: 1rem;
-    width: 60%;
+    background: var(--surface-black);
+    border-radius: 16px;
+    padding: 2rem;
+    width: 70%;
     max-height: 80%;
     overflow-y: auto;
     position: relative;
     border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transform: scale(0.9);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
 }
 
-.close-button {
-    position:absolute;
-    top: 1rem;
-    right: 1rem;
+.modal.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.modal-header .close-button {
     cursor:pointer;
-    font-weight:bold;
-    font-size:1.5rem;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.modal-header .close-button:hover {
+    color: var(--primary-pink);
+    transform: rotate(90deg);
+}
+
+.modal-header #downloadLink {
+    cursor:pointer;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.modal-header #downloadLink:hover {
     color: var(--primary-pink);
 }
 
-#previewArea img, #previewArea video, #previewArea audio {
-    max-width:100%;
-    max-height:50vh;
-    display:block;
-    margin:auto;
+.modal-body h3 {
+    margin-top: 0;
+    color: var(--text-primary);
 }
 
-#previewArea pre {
+.modal-body #previewArea img,
+.modal-body #previewArea video,
+.modal-body #previewArea audio {
+    max-width: 100%;
+    max-height: 60vh;
+    display: block;
+    margin: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.modal-body #previewArea pre {
     white-space: pre-wrap;
     word-wrap: break-word;
     color: var(--text-primary);
+    background: rgba(255,255,255,0.05);
+    padding: 1rem;
+    border-radius: 8px;
+    font-family: 'Fira Code', monospace;
 }
 
 #downloadLink a {
     display: inline-flex;
     align-items: center;
-    padding: 0.5rem 1rem;
-    background-color: var(--primary-pink);
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary-pink), var(--primary-purple));
     color: white;
     text-decoration: none;
-    border-radius: 4px;
-    transition: background-color 0.2s;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 #downloadLink a:hover {
-    background-color: #c2185b; /* darker pink */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(248, 147, 253, 0.3);
 }
 
 #modalButtons button {
-    margin-right: 0.5rem;
-    padding: 0.5rem 1rem;
+    margin-right: 1rem;
+    padding: 0.75rem 1.5rem;
     border: none;
-    border-radius: 4px;
-    background-color: var(--secondary-green);
-    color: white;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--secondary-blue), var(--secondary-green));
+    color: var(--bg-black);
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 #modalButtons button:hover {
-    background-color: #00a152;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(161, 242, 254, 0.3);
 }
 
 #fileName {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary-pink);
+    font-weight: 600;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-purple);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-pink);
+}
+
+#loadingMessage {
+    display: none;
+    text-align: center;
+    color: var(--text-secondary);
+    margin: 1rem;
 }
