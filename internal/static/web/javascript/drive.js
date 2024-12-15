@@ -2,11 +2,11 @@
 $(document).ready(function() {
     const folderGrid = $('#folderGrid');
     const fileGrid = $('#fileGrid');
-    const currentPath = $('#currentPath');
     const previewModal = $('#previewModal');
     const previewArea = $('#previewArea');
     const downloadLink = $('#downloadLink');
     const closeButton = $('.close-button');
+    const modalFileName = $('#modalFileName');
 
     let currentRelPath = initialPath;
     let currentFiles = [];
@@ -58,12 +58,6 @@ $(document).ready(function() {
         currentFiles = files;
         currentFileIndex = -1;
 
-        if (p === '') {
-            currentPath.text('~/');
-        } else {
-            currentPath.text('~/' + p);
-        }
-
         if (p !== '') {
             const parentPath = p.split('/').slice(0, -1).join('/');
             const parentDiv = $(`
@@ -100,10 +94,11 @@ $(document).ready(function() {
         });
 
         files.forEach((item, index) => {
+            const iconName = getFileIcon(item.name);
             const div = $(`
                 <div class="item file" data-index="${index}">
                     <div class="icon-name">
-                        <span class="material-icons">insert_drive_file</span>
+                        <span class="material-icons">${iconName}</span>
                         <span>${escapeHtml(item.name)}</span>
                     </div>
                 </div>
@@ -114,6 +109,39 @@ $(document).ready(function() {
             });
             fileGrid.append(div);
         });
+
+        updateBreadcrumb(p);
+    }
+
+    function getFileType(extension) {
+        const ext = extension.toLowerCase();
+        if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg'].includes(ext)) return 'image';
+        if (['txt', 'md', 'rtf'].includes(ext)) return 'text';
+        if (['mp4', 'avi', 'mov', 'wmv', 'flv'].includes(ext)) return 'video';
+        if (['mp3', 'wav', 'aac', 'flac'].includes(ext)) return 'audio';
+        if (ext === 'pdf') return 'pdf';
+        if (ext === 'html' || ext === 'htm') return 'html';
+        if (['js', 'css', 'py', 'java', 'c', 'cpp', 'rb', 'go', 'php'].includes(ext)) return 'code';
+        if (['xml', 'json', 'yaml', 'yml', 'iml', 'gitignore'].includes(ext)) return 'data_object';
+        if (['zip', 'tar', 'rar', '7z', 'gz', 'jar'].includes(ext)) return 'archive';
+        return 'binary';
+    }
+
+    function getFileIcon(fileName) {
+        const extension = fileName.split('.').pop();
+        const type = getFileType(extension);
+        switch(type) {
+            case 'image': return 'image';
+            case 'text': return 'description';
+            case 'video': return 'movie';
+            case 'audio': return 'audiotrack';
+            case 'pdf': return 'picture_as_pdf';
+            case 'html': return 'language';
+            case 'code': return 'code';
+            case 'data_object': return 'data_object';
+            case 'archive': return 'archive';
+            default: return 'insert_drive_file';
+        }
     }
 
     function previewFile(item) {
@@ -137,13 +165,13 @@ $(document).ready(function() {
                 } else if (mime.startsWith('audio/')) {
                     loadContent(item.path, 'blob', mime, 'audio');
                 } else {
-                    showModal("<p>Preview not available.</p>", item.path);
+                    showModal("<p>Preview not available.</p>", item.path, item.name);
                 }
             },
             error: function(err) {
                 hideLoading();
                 console.warn("Preview info failed, download only:", err);
-                showModal("<p>Preview not available.</p>", item.path);
+                showModal("<p>Preview not available.</p>", item.path, item.name);
             }
         });
     }
@@ -157,7 +185,7 @@ $(document).ready(function() {
             success: function(data) {
                 hideLoading();
                 if (responseType === 'text') {
-                    showModal(`<pre>${escapeHtml(data)}</pre>`, filePath);
+                    showModal(`<pre>${escapeHtml(data)}</pre>`, filePath, getFileName(filePath));
                 } else if (responseType === 'blob') {
                     let blob = new Blob([data], {type: mime});
                     let url = URL.createObjectURL(blob);
@@ -169,20 +197,21 @@ $(document).ready(function() {
                     } else if (mediaType === 'audio') {
                         mediaElem = `<audio controls src="${url}"></audio>`;
                     }
-                    showModal(mediaElem, filePath);
+                    showModal(mediaElem, filePath, getFileName(filePath));
                 }
             },
             error: function(err) {
                 hideLoading();
                 console.error("Content load failed:", err);
-                showModal("<p>Failed to load content.</p>", filePath);
+                showModal("<p>Failed to load content.</p>", filePath, getFileName(filePath));
             }
         });
     }
 
-    function showModal(contentHtml, filePath) {
+    function showModal(contentHtml, filePath, fileName) {
         downloadLink.html(`<a href="/api/drive/download?file=${encodeURIComponent(filePath)}" class="material-icons" title="Download">download</a>`);
         previewArea.html(contentHtml);
+        modalFileName.text(fileName);
         previewModal.addClass('active');
     }
 
@@ -190,11 +219,18 @@ $(document).ready(function() {
         previewModal.removeClass('active');
         previewArea.html('');
         downloadLink.html('');
+        modalFileName.text('');
         currentFileIndex = -1;
     }
 
     closeButton.click(function() {
         closeModal();
+    });
+
+    $('.modal').click(function(e) {
+        if ($(e.target).is('.modal')) {
+            closeModal();
+        }
     });
 
     $(document).keydown(function(e) {
@@ -245,5 +281,38 @@ $(document).ready(function() {
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;');
+    }
+
+    function getFileName(filePath) {
+        return filePath.split('/').pop();
+    }
+
+    function updateBreadcrumb(p) {
+        const breadcrumb = $('#breadcrumb');
+        breadcrumb.empty();
+
+        const paths = p.split('/').filter(part => part !== '');
+        let accumulatedPath = '';
+        const homeLink = $('<a href="#" data-path="">Home</a>');
+        homeLink.click(function(e){
+            e.preventDefault();
+            currentRelPath = '';
+            history.pushState(null, '', '/drive/');
+            loadDirectory('');
+        });
+        breadcrumb.append(homeLink);
+
+        paths.forEach((part, index) => {
+            breadcrumb.append(' / ');
+            accumulatedPath += (accumulatedPath ? '/' : '') + part;
+            const link = $('<a href="#" data-path="' + accumulatedPath + '">' + escapeHtml(part) + '</a>');
+            link.click(function(e){
+                e.preventDefault();
+                currentRelPath = $(this).data('path');
+                history.pushState(null, '', '/drive/' + currentRelPath);
+                loadDirectory(currentRelPath);
+            });
+            breadcrumb.append(link);
+        });
     }
 });

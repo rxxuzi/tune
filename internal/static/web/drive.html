@@ -1,3 +1,4 @@
+<!-- internal/static/web/drive.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,23 +6,16 @@
     <title>Tune Drive</title>
     <link rel="stylesheet" href="/web/css/style.css">
     <link rel="stylesheet" href="/web/css/drive.css">
+    <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 <header>
     <a href="/home" id="tune">Tune</a>
-    <div class="user-info">
-        <span class="material-icons">account_circle</span>
-        <p>{{ .UserHost }}</p>
-    </div>
+    <nav id="breadcrumb" aria-label="breadcrumb"></nav>
 </header>
 <main>
-    <h2 class="gradient-text">Remote Drive</h2>
     <div class="drive-container">
-        <div class="path-display">
-            <span class="material-icons">folder</span>
-            Current Path: <span id="currentPath">~/{{ .SubPath }}</span>
-        </div>
         <section class="folders">
             <h2><span class="material-icons">folder</span>Folders</h2>
             <div class="grid" id="folderGrid">
@@ -45,12 +39,15 @@
     </div>
 </main>
 
-<!-- プレビューモーダル -->
+<!-- Preview modal -->
 <div class="modal" id="previewModal">
     <div class="modal-content">
         <div class="modal-header">
-            <span class="close-button material-icons">close</span>
-            <span id="downloadLink" class="material-icons" title="Download">download</span>
+            <span id="modalFileName">File Name</span>
+            <div class="buttons">
+                <span id="downloadLink" class="material-icons" title="Download">download</span>
+                <span class="close-button material-icons">close</span>
+            </div>
         </div>
         <div class="modal-body">
             <h3>Preview</h3>

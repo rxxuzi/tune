@@ -30,10 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // モーダル外クリックで閉じる
     window.addEventListener("click", (event) => {
-        if (event.target == fileModal) {
+        if (event.target === fileModal) {
             fileModal.style.display = "none";
         }
-        if (event.target == previewModal) {
+        if (event.target === previewModal) {
             previewModal.style.display = "none";
         }
     });
@@ -229,11 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // アップロードボタンの有効化
-        if (selectedFiles.length > 0) {
-            startUploadButton.disabled = false;
-        } else {
-            startUploadButton.disabled = true;
-        }
+        startUploadButton.disabled = selectedFiles.length <= 0;
     }
 
     // プレビューボタンが必要か判定する関数

@@ -1,6 +1,14 @@
+/* drive.css */
 :root {
     --item-width: 250px;
     --item-height: 60px;
+    --primary-pink: #F893FD;
+    --primary-purple: #AAAAFB;
+    --secondary-green: #A9FA9E;
+    --surface-black: #1C1C1E;
+    --text-primary: #FFFFFF;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --header-height: 4.3rem;
 }
 
 .drive-container {
@@ -14,6 +22,21 @@ body {
     overflow-y: scroll;
 }
 
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--header-height);
+}
+
 main {
     max-width: none;
     min-height: calc(100vh - var(--header-height));
@@ -22,21 +45,6 @@ main {
     display: flex;
     flex-direction: column;
     margin: 0 auto;
-}
-
-
-.path-display {
-    margin-bottom: 1.5rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.path-display .material-icons {
-    font-size: 1.25rem;
-    color: var(--primary-purple);
 }
 
 .folders, .files {
@@ -99,8 +107,15 @@ main {
 
 .icon-name .material-icons {
     font-size: 2rem;
-    color: var(--primary-pink);
     transition: all 0.3s ease;
+}
+
+.item.file .material-icons {
+    color: var(--secondary-green);
+}
+
+.item.folder .material-icons {
+    color: var(--primary-pink);
 }
 
 .item:hover .icon-name .material-icons {
@@ -113,6 +128,13 @@ main {
 
 .parent-dir .material-icons {
     transform: rotate(180deg);
+}
+
+.icon-name span {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .modal {
@@ -142,7 +164,7 @@ main {
     padding: 2rem;
     width: 70%;
     max-height: 80%;
-    overflow-y: auto;
+    overflow: hidden;
     position: relative;
     border: 1px solid rgba(255,255,255,0.1);
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
@@ -160,30 +182,44 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    position: sticky;
+    top: 0;
+    background: var(--surface-black);
+    z-index: 10;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
-.modal-header .close-button {
-    cursor:pointer;
+.modal-header #modalFileName {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    max-width: 70%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.modal-header .buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.modal-header .buttons .material-icons {
     font-size: 1.5rem;
+    cursor: pointer;
     color: var(--text-secondary);
-    transition: all 0.3s ease;
+    transition: color 0.3s ease;
 }
 
-.modal-header .close-button:hover {
+.modal-header .buttons .material-icons:hover {
     color: var(--primary-pink);
-    transform: rotate(90deg);
 }
 
-.modal-header #downloadLink {
-    cursor:pointer;
-    font-size: 1.5rem;
-    color: var(--text-secondary);
-    transition: all 0.3s ease;
-}
-
-.modal-header #downloadLink:hover {
-    color: var(--primary-pink);
+.modal-body {
+    overflow-y: auto;
+    margin-top: 1rem;
+    flex: 1;
 }
 
 .modal-body h3 {
@@ -217,8 +253,7 @@ main {
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, var(--primary-pink), var(--primary-purple));
-    color: white;
+    color: var(--primary-pink);
     text-decoration: none;
     border-radius: 8px;
     transition: all 0.3s ease;
@@ -276,4 +311,51 @@ main {
     text-align: center;
     color: var(--text-secondary);
     margin: 1rem;
+}
+
+#breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 2rem;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    flex-wrap: wrap;
+}
+
+#breadcrumb a {
+    color: var(--primary-purple);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    max-width: 200px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#breadcrumb a:hover {
+    color: var(--primary-pink);
+}
+
+@media (max-width: 768px) {
+    .drive-container {
+        padding: 1rem;
+    }
+
+    .icon-name span {
+        max-width: 100px;
+    }
+
+    .modal-content {
+        width: 90%;
+    }
+
+    #modalFileName {
+        font-size: 1rem;
+    }
+
+    .modal-header .buttons .material-icons {
+        font-size: 1.25rem;
+    }
 }
